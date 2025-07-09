@@ -1,147 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VidNex - Free AI Video Generator</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2721/2721633.png" />
+  <title>VidNex - مفت AI ویڈیو جنریٹر</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0f0f0f;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .logo {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      margin-bottom: 10px;
-      font-size: 2rem;
-      text-align: center;
-    }
-
-    select {
-      margin: 10px;
-      padding: 10px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: none;
-      background-color: #1c1c1c;
-      color: white;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 960px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    }
-
-    iframe {
-      width: 100%;
-      height: 720px;
-      border: none;
-      border-radius: 12px;
-    }
-
-    #download-section {
-      margin-top: 10px;
-      text-align: center;
-      display: none;
-    }
-
-    #download-link {
-      background-color: #1db954;
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: 0.3s;
-    }
-
-    #download-link:hover {
-      background-color: #14833b;
-    }
-
-    footer {
-      margin-top: 20px;
-      font-size: 0.9rem;
-      color: #aaa;
-      text-align: center;
-    }
-
-    @media (max-width: 768px) {
-      iframe {
-        height: 500px;
-      }
-
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      select {
-        width: 90%;
-      }
-    }
+    body { font-family: 'sans-serif'; background:#111; color:#fff; text-align:center; padding:20px; }
+    h1 { font-size:2rem; margin:10px 0; }
+    iframe { width:100%; max-width:960px; height:720px; border-radius:12px; border:none; box-shadow:0 0 12px rgba(0,0,0,0.2); }
+    #download-section { margin-top:20px; display:none; }
+    #download-link { background:#28a745; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; }
+    footer { margin-top:30px; color:#aaa; font-size:0.9rem; }
   </style>
 </head>
 <body>
-  <img src="https://cdn-icons-png.flaticon.com/512/2721/2721633.png" alt="VidNex Logo" class="logo" />
-  <h1>🚀 VidNex - Free AI Video Generator</h1>
+  <h1>🚀 VidNex - مفت AI ویڈیو جنریٹر</h1>
 
-  <!-- Model Selector -->
-  <select id="model-selector">
-    <option value="https://vidnex-vidnex_ai.hf.space">🎬 AnimateDiff (VidNex)</option>
-    <option value="https://lucataco-animatelcm.hf.space">⚡ AnimateLCM (lucataco)</option>
-    <option value="https://cerspense-zeroscope-v2-576w.hf.space">📽️ ZeroScope 576w</option>
-  </select>
+  <iframe
+    id="vidnex-frame"
+    src="https://bitdancer-animatediff-lightning.hf.space"
+    allow="clipboard-write; camera; microphone; encrypted-media;"
+    loading="lazy">
+  </iframe>
 
-  <!-- Iframe Embed -->
-  <div class="container">
-    <iframe id="vidnex-frame" src="https://vidnex-vidnex_ai.hf.space" allow="camera; microphone; clipboard-write; encrypted-media;" loading="lazy"></iframe>
-  </div>
-
-  <!-- Download Section -->
   <div id="download-section">
-    <a id="download-link" href="#" target="_blank" download>🎬 Download Your Video</a>
+    <a id="download-link" href="#" download target="_blank">🎬 ویڈیو ڈاؤنلوڈ کریں</a>
   </div>
 
-  <footer>
-    Made with ❤️ by VidNex | Powered by Hugging Face Spaces
-  </footer>
+  <footer>❤️ سے بنایا گیا VidNex کی جانب سے | Hugging Face Spaces کے ذریعے چل رہا ہے</footer>
 
-  <!-- JavaScript -->
   <script>
-    const iframe = document.getElementById('vidnex-frame');
-    const selector = document.getElementById('model-selector');
-    const downloadSection = document.getElementById('download-section');
-    const downloadLink = document.getElementById('download-link');
-
-    selector.addEventListener('change', () => {
-      iframe.src = selector.value;
-      downloadSection.style.display = 'none';
-    });
-
-    // Detect .mp4 video message from iframe
-    window.addEventListener('message', (event) => {
-      const data = event.data;
-      if (typeof data === 'string' && data.includes('.mp4')) {
-        const urlMatch = data.match(/https:\/\/.*\.mp4/);
-        if (urlMatch) {
-          const videoURL = urlMatch[0];
-          downloadLink.href = videoURL;
-          downloadSection.style.display = 'block';
+    window.addEventListener('message', (e) => {
+      const msg = e.data;
+      if (typeof msg === 'string' && msg.includes('.mp4')) {
+        const link = msg.match(/https:\/\/.*?\.mp4/);
+        if (link) {
+          document.getElementById('download-link').href = link[0];
+          document.getElementById('download-section').style.display = 'block';
         }
       }
     });
